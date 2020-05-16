@@ -15,6 +15,8 @@ function addTodo(text) {
     const list = document.querySelector('.js-todo-list');
     list.insertAdjacentHTML('beforeend', `
         <li class="todo-item" data-key="${todo.id}">
+            <input id="${todo.id}" type="checkbox"/>
+            <label for="${todo.id}" class="tick js-tick"></label>
             <span>${todo.text}</span>
             <button class="delete-todo js-delete-todo">
                 <svg>
@@ -23,6 +25,20 @@ function addTodo(text) {
             </button>
         </li>
     `)
+}
+
+// Funcao checa todo
+
+function checkTodo(key) {
+    const index = todoItems.findIndex(item => item.id === Number(key));
+    todoItems[index].checked = !todoItems[index].checked;
+
+    const item = document.querySelector(`[data-key='${key}']`);
+    if(todoItems[index].checked){
+        item.classList.add('done');
+    }else {
+        item.classList.remove('done');
+    }
 }
 
 // verifica evento formulario e valor input
@@ -39,4 +55,11 @@ form.addEventListener('submit', event => {
     }
 })
 
-// 
+// verifica click e item da lista para checkar
+const list = document.querySelector('.js-todo-list');
+list.addEventListener('click', event => {
+    if(event.target.classList.contains('js-tick')){
+        const itemKey = event.target.parentElement.dataset.key;
+        checkTodo(itemKey)
+    }
+})
